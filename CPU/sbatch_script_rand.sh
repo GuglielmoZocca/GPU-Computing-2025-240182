@@ -1,14 +1,12 @@
 #!/bin/bash
-#Script for a single sbatch: $1 (matrix), $2 (block size)
+#Script for a single random matrix sbatch: $1 (number of rows), $2 (number of columns), $3 (number of non zeros), $4 (seed for the randomization)
 #SBATCH --partition=edu-short
 #SBATCH --nodes=1
 #SBATCH --tasks=1
-#SBATCH --gres=gpu:1
+#SBATCH --gres=gpu:0
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:05:00
 #SBATCH --job-name=test
 #SBATCH --output=outputs/test-%j.out
 #SBATCH --error=errors/test-%j.err
-
-./bin/SpMV $1 $2
-
+./bin/SpMV $1 $2 $3 $4

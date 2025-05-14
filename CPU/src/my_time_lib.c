@@ -1,7 +1,6 @@
 #include "../include/my_time_lib.h"
 
-// Put here the implementation of mu_fn and sigma_fn
-
+//Arithmetic mean
 double mu_fn_sol(double *v, int len) {
 
     double mu = 0.0;
@@ -12,6 +11,7 @@ double mu_fn_sol(double *v, int len) {
     return(mu);
 }
 
+//Standard deviation
 double sigma_fn_sol(double *v, double mu, int len) {
 
     double sigma = 0.0;

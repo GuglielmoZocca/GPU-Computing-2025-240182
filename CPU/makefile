@@ -1,4 +1,5 @@
-
+CC = gcc
+OPT = -O3 
 BIN_FOLDER := bin
 OBJ_FOLDER := obj
 SRC_FOLDER := src
@@ -15,7 +16,7 @@ $(OBJ_FOLDER)/my_time_lib.o: $(SRC_FOLDER)/my_time_lib.c
 
 $(BIN_FOLDER)/SpMV: SpMV.c $(OBJECTS)
 	@mkdir -p $(BIN_FOLDER) $(OBJ_FOLDER) $(BATCH_OUT_FOLDER)
-	$(CC) $^ -o $@ $(OPT)
+	$(CC) $^ -o $@ $(OPT) $(MACROS)
 
 clean_batch_outputs:
 	rm $(BATCH_OUT_FOLDER)/*

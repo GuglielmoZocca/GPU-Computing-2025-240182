@@ -1,5 +1,5 @@
-#ifndef LAB1_EX2_LIB
-#define LAB1_EX2_LIB
+#ifndef FUNC_F
+#define FUNC_F
 
 #include <sys/time.h>
 
@@ -30,7 +30,14 @@ printf("\n\t");                     \
 printf("\n");                           \
 }
 
-#define PRINT_RESULT_VECTOR( V, NAME, LEN ) {    \
+#define PRINT_RESULT_VECTORF( V, NAME, LEN ) {    \
+printf("%2s: ", NAME);                  \
+for (int i=0; i<LEN; i++)               \
+printf("%4f ", V[i]);               \
+printf("\n");                           \
+}
+
+#define PRINT_RESULT_VECTORI( V, NAME, LEN ) {    \
 printf("%2s: ", NAME);                  \
 for (int i=0; i<LEN; i++)               \
 printf("%4d ", V[i]);               \
