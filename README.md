@@ -1,11 +1,11 @@
-#SPMV PROJECT
+# SPMV PROJECT
 
-##Directory structure
+## Directory structure
 
 In this section, the project's directory structure and the contents of each directory and file are explained:
-*graph_report.ipynb: It is a Jupyter notebook for the compilation of some graph used by the report based on the test
-*matrix: it will contain the matrix used in the test
-*CPU: Directory for the CPU solution
+* graph_report.ipynb: It is a Jupyter notebook for the compilation of some graph used by the report based on the test
+* matrix: it will contain the matrix used in the test
+* CPU: Directory for the CPU solution
   - makefile
   - sbatch_script.sh: sbatch script for a run of the CPU Solution with a matrix
   - sbatch_script_rand.sh: sbatch script for a run of the CPU Solution with a random matrix
@@ -16,7 +16,7 @@ In this section, the project's directory structure and the contents of each dire
   - src: contains the source code for the time, print, mean and standard deviation library
   - test_script: contain the test script for the test
   - test: contain the parsed result of the test
-*GPU: Directory for the GPU solution
+* GPU: Directory for the GPU solution
   - makefile
   - sbatch_script.sh: sbatch script for a run of the GPU Solution with a matrix
   - sbatch_script_rand.sh: sbatch script for a run of the GPU Solution with a random matrix
