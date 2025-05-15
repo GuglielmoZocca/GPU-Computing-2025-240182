@@ -21,7 +21,7 @@ In this section, the project's directory structure and the contents of each dire
   - sbatch_script.sh: sbatch script for a run of the GPU Solution with a matrix
   - sbatch_script_rand.sh: sbatch script for a run of the GPU Solution with a random matrix
   - sbatch_test.sh: sbatch script for the test
-  - Parse_script_out_CPU.py: python script for parse test result
+  - Parse_script_out_GPU.py: python script for parse test result
   - SpMV.cu: cu script for the CPU solution
   - include: contains the header for the time, print, mean and standard deviation library
   - src: contains the source code for the time, print, mean and standard deviation library
@@ -41,7 +41,7 @@ To execute the test used for the paper follow this instructions:
    4. When the test ended, the result can be found in `test/GPU_test_Complete.csv`
    5. In case you can run Jupyter notebook, you can visualize some graphs related to the test through the notebook `../graph_report.ipynb`
 1. In case you want to test CPU solution:
-   1. Go to the GPU directory: `cd Path/to/CPU`
+   1. Go to the CPU directory: `cd Path/to/CPU`
    2. Give the permission to the test script: `chmod +x ./test_script/test_sortcvssortr.sh`
    3. Execute the script: `./test_script/test_sortcvssortr.sh`
    4. When the test ended, the result can be found in `test/CPU_test_Complete.csv`
