@@ -33,7 +33,7 @@ In this section, the project's directory structure and the contents of each dire
 
 To execute the test used for the paper follow this instructions:
 1. Clone the repository
-2. Download the following `matrix` from [here](https://sparse.tamu.edu) in matrix directory: BenElechi1.mtx, degme.mtx, Cities.mtx, Hardesty2.mtx, mawi_201512012345.mtx, rail4284.mtx, specular.mtx,t2em.mtx, torso1.mtx
+2. Download the following `matrix` from [here](https://sparse.tamu.edu) in matrix directory: BenElechi1.mtx, degme.mtx, Cities.mtx, Hardesty2.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx, torso1.mtx
 3. In case you want to test GPU solutions:
    1. Go to the GPU directory: `cd Path/to/GPU`
    2. Give the permission to the test script: `chmod +x ./test_script/test_sortcvssortr.sh`
