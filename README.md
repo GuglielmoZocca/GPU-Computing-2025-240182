@@ -3,7 +3,7 @@
 ## Directory structure
 
 In this section, the project's directory structure and the contents of each directory and file are explained:
-* graph_report.ipynb: It is a Jupyter notebook for the compilation of some graph used by the report based on the test
+* graph_report.ipynb: It is a Jupyter notebook for the compilation of some data graph used by the report based on the test
 * matrix: it will contain the matrix used in the test
 * CPU: Directory for the CPU solution
   - makefile
@@ -69,7 +69,7 @@ To check the correctness of the solution follow these instructions:
 
 To execute a solution with a random matrix follow these instruction:
 1. In case you want to test GPU solutions:
-   1. Go to the GPU directory: `cd Path/to/GPU`
+   1. Go to the CPU directory: `cd Path/to/GPU`
    2. Load the required module: `module load CUDA/12.3.2`
    3. Remove the possible executable: `rm bin/SpMV`
    4. Execute `make` with the desired macros :
