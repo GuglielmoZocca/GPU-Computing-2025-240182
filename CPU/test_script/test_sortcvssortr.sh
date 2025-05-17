@@ -12,13 +12,12 @@ make "MACROS=-D dtype=float -D SortR"
 ./sbatch_test.sh BenElechi1.mtx SortR
 ./sbatch_test.sh degme.mtx SortR
 ./sbatch_test.sh Hardesty2.mtx SortR
-./sbatch_test.sh rail4284.mtx SortR
+./sbatch_test.sh rail2586.mtx SortR
 ./sbatch_test.sh specular.mtx SortR
-./sbatch_test.sh t2em.mtx SortR
 ./sbatch_test.sh torso1.mtx SortR
 ./sbatch_test.sh mawi_201512012345.mtx SortR
 
-OUTPUTF="outputs/test-mawi_201512012345.mtx-SortC.out"
+OUTPUTF="outputs/test-mawi_201512012345.mtx-SortR.out"
 
 # Wait until the file exists
 while [ ! -s $OUTPUTF ]; do
@@ -28,17 +27,16 @@ done
 rm bin/SpMV
 make "MACROS=-D dtype=float -D SortC"
 
-./sbatch_test.sh Cities.mtx SortR
-./sbatch_test.sh BenElechi1.mtx SortR
-./sbatch_test.sh degme.mtx SortR
-./sbatch_test.sh Hardesty2.mtx SortR
-./sbatch_test.sh rail4284.mtx SortR
-./sbatch_test.sh specular.mtx SortR
-./sbatch_test.sh t2em.mtx SortR
-./sbatch_test.sh torso1.mtx SortR
-./sbatch_test.sh mawi_201512012345.mtx SortR
+./sbatch_test.sh Cities.mtx SortC
+./sbatch_test.sh BenElechi1.mtx SortC
+./sbatch_test.sh degme.mtx SortC
+./sbatch_test.sh Hardesty2.mtx SortC
+./sbatch_test.sh rail2586.mtx SortC
+./sbatch_test.sh specular.mtx SortC
+./sbatch_test.sh torso1.mtx SortC
+./sbatch_test.sh mawi_201512012345.mtx SortC
 
-OUTPUTF="outputs/test-mawi_201512012345.mtx-SortR.out"
+OUTPUTF="outputs/test-mawi_201512012345.mtx-SortC.out"
 
 # Wait until the file exists
 while [ ! -s $OUTPUTF ]; do

@@ -14,9 +14,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortR COO1
 ./sbatch_test.sh degme.mtx $i SortR COO1
 ./sbatch_test.sh Hardesty2.mtx $i SortR COO1
-./sbatch_test.sh rail4284.mtx $i SortR COO1
+./sbatch_test.sh rail2586.mtx $i SortR COO1
 ./sbatch_test.sh specular.mtx $i SortR COO1
-./sbatch_test.sh t2em.mtx $i SortR COO1
 ./sbatch_test.sh torso1.mtx $i SortR COO1
 ./sbatch_test.sh mawi_201512012345.mtx $i SortR COO1
 done
@@ -38,9 +37,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortC COO1
 ./sbatch_test.sh degme.mtx $i SortC COO1
 ./sbatch_test.sh Hardesty2.mtx $i SortC COO1
-./sbatch_test.sh rail4284.mtx $i SortC COO1
+./sbatch_test.sh rail2586.mtx $i SortC COO1
 ./sbatch_test.sh specular.mtx $i SortC COO1
-./sbatch_test.sh t2em.mtx $i SortC COO1
 ./sbatch_test.sh torso1.mtx $i SortC COO1
 ./sbatch_test.sh mawi_201512012345.mtx $i SortC COO1
 done
@@ -62,9 +60,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortR COO2
 ./sbatch_test.sh degme.mtx $i SortR COO2
 ./sbatch_test.sh Hardesty2.mtx $i SortR COO2
-./sbatch_test.sh rail4284.mtx $i SortR COO2
+./sbatch_test.sh rail2586.mtx $i SortR COO2
 ./sbatch_test.sh specular.mtx $i SortR COO2
-./sbatch_test.sh t2em.mtx $i SortR COO2
 ./sbatch_test.sh torso1.mtx $i SortR COO2
 ./sbatch_test.sh mawi_201512012345.mtx $i SortR COO2
 done
@@ -86,9 +83,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortR COO3
 ./sbatch_test.sh degme.mtx $i SortR COO3
 ./sbatch_test.sh Hardesty2.mtx $i SortR COO3
-./sbatch_test.sh rail4284.mtx $i SortR COO3
+./sbatch_test.sh rail2586.mtx $i SortR COO3
 ./sbatch_test.sh specular.mtx $i SortR COO3
-./sbatch_test.sh t2em.mtx $i SortR COO3
 ./sbatch_test.sh torso1.mtx $i SortR COO3
 #./sbatch_test.sh mawi_201512012345.mtx $i SortR COO3
 done
@@ -110,9 +106,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortR COO4
 ./sbatch_test.sh degme.mtx $i SortR COO4
 ./sbatch_test.sh Hardesty2.mtx $i SortR COO4
-./sbatch_test.sh rail4284.mtx $i SortR COO4
+./sbatch_test.sh rail2586.mtx $i SortR COO4
 ./sbatch_test.sh specular.mtx $i SortR COO4
-./sbatch_test.sh t2em.mtx $i SortR COO4
 ./sbatch_test.sh torso1.mtx $i SortR COO4
 ./sbatch_test.sh mawi_201512012345.mtx $i SortR COO4
 done
@@ -134,9 +129,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortC COO4
 ./sbatch_test.sh degme.mtx $i SortC COO4
 ./sbatch_test.sh Hardesty2.mtx $i SortC COO4
-./sbatch_test.sh rail4284.mtx $i SortC COO4
+./sbatch_test.sh rail2586.mtx $i SortC COO4
 ./sbatch_test.sh specular.mtx $i SortC COO4
-./sbatch_test.sh t2em.mtx $i SortC COO4
 ./sbatch_test.sh torso1.mtx $i SortC COO4
 ./sbatch_test.sh mawi_201512012345.mtx $i SortC COO4
 done
@@ -158,9 +152,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortR COO5
 ./sbatch_test.sh degme.mtx $i SortR COO5
 ./sbatch_test.sh Hardesty2.mtx $i SortR COO5
-./sbatch_test.sh rail4284.mtx $i SortR COO5
+./sbatch_test.sh rail2586.mtx $i SortR COO5
 ./sbatch_test.sh specular.mtx $i SortR COO5
-./sbatch_test.sh t2em.mtx $i SortR COO5
 ./sbatch_test.sh torso1.mtx $i SortR COO5
 ./sbatch_test.sh mawi_201512012345.mtx $i SortR COO5
 done
@@ -182,9 +175,8 @@ do
 ./sbatch_test.sh BenElechi1.mtx $i SortC COO5
 ./sbatch_test.sh degme.mtx $i SortC COO5
 ./sbatch_test.sh Hardesty2.mtx $i SortC COO5
-./sbatch_test.sh rail4284.mtx $i SortC COO5
+./sbatch_test.sh rail2586.mtx $i SortC COO5
 ./sbatch_test.sh specular.mtx $i SortC COO5
-./sbatch_test.sh t2em.mtx $i SortC COO5
 ./sbatch_test.sh torso1.mtx $i SortC COO5
 ./sbatch_test.sh mawi_201512012345.mtx $i SortC COO5
 done

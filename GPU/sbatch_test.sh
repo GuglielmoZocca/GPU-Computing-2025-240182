@@ -5,11 +5,11 @@ ERROR=errors/test-$1-$2-$3-$4.err
 cat <<EOF > temp_job.sh
 #!/bin/bash
 #SBATCH --partition=edu-short
+#SBATCH --nodelist=edu01
 #SBATCH --nodes=1
 #SBATCH --tasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=00:05:00
 #SBATCH --job-name=test
 #SBATCH --output=$OUTPUT
 #SBATCH --error=$ERROR

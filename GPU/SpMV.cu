@@ -13,9 +13,12 @@
 //#define Pinned or Managed //Type of memory copy
 //#define SortC or SortR //Decide column or row sorting
 //#define PRINT //Print the result
+//#define Check //Abilitate the check for the correctness of the solution through the CPU SpMV (only for integer matrix)
 
 #define PFP32 10300 //Peak FP32 Compute Performance
+//define PFP32 91600 //Peak FP32 Compute Performance
 #define MB 933 //Peak Memory Bandwidth
+//#define MB 864 //Peak Memory Bandwidth
 
 //Check correctness of macros
 
@@ -744,6 +747,7 @@ int main(int argc, char *argv[]) {
     }
     #endif
 
+    #ifdef Check
     //If the input matrix has integer value then it is checked the correctness of the chosen SpMV solution with CPU solution
     if(typ){
       	dtype *Cpuc = (dtype *)malloc(n*sizeof(dtype));
@@ -766,17 +770,19 @@ int main(int argc, char *argv[]) {
 
     }
 
+    #endif
+
 	init_matrixV(1,n,c,0);
 
     #ifdef Pinned
     cudaMemcpy(d_c, c, n*sizeof(dtype), cudaMemcpyHostToDevice);
     #endif
 
+    #ifndef COO1
     cudaEvent_t start, stop;
 	cudaEventCreate(&start);
 	cudaEventCreate(&stop);
 
-	#ifndef COO1
     float millisec;
     #endif
 
@@ -840,8 +846,10 @@ int main(int argc, char *argv[]) {
         #endif
     }
 
+    #ifndef COO1
     cudaEventDestroy(start);
 	cudaEventDestroy(stop);
+	#endif
 
     printf( "%d iterations performed\n\n", NITER);
 
@@ -866,6 +874,19 @@ int main(int argc, char *argv[]) {
 
     double AI_O = 2;
     int AI_A = sizeof(dtype)*6 + sizeof(int)*2;
+    double AI = AI_O/AI_A;
+
+    #endif
+
+    #ifdef COO2
+    printf("COO2,");
+
+    int nflop = 2*nonZeros;
+
+    unsigned int nMemAc = sizeof(int)*(4*nonZeros + n - 2) + sizeof(dtype)*(n + 2*nonZeros);
+
+    double AI_O = 2;
+    int AI_A = sizeof(dtype)*3 + sizeof(int)*5;
     double AI = AI_O/AI_A;
 
     #endif
@@ -951,18 +972,6 @@ int main(int argc, char *argv[]) {
 
     #endif
 
-    #ifdef COO2
-    printf("COO2,");
-
-    int nflop = 2*nonZeros;
-
-    unsigned int nMemAc = sizeof(int)*(4*nonZeros + n - 2) + sizeof(dtype)*(n + 2*nonZeros);
-
-    double AI_O = 2;
-    int AI_A = sizeof(dtype)*3 + sizeof(int)*5;
-    double AI = AI_O/AI_A;
-
-    #endif
 
     printf("%d,%d,%d,%d,",n,m,nonZeros,threads);
     #ifdef RAND
@@ -992,6 +1001,7 @@ int main(int argc, char *argv[]) {
     double effBand = (nMemAc/1.e9)/mu;
 
     double RP = 11.039657;
+    //double RP = 106.01851852;
 
     printf("%lf,%lf,%d,%u,%lf,%d,%lf,%lf,%lf,%lf,%lf",mu,sigma,nflop,nMemAc,AI_O,AI_A,AI,Iperf,flops,effBand,RP);
 
@@ -1001,6 +1011,20 @@ int main(int argc, char *argv[]) {
     cudaFree(d_COOr);
     cudaFree(d_COOc);
     cudaFree(d_COOv);
+
+    cudaFreeHost(COOr);
+    cudaFreeHost(COOc);
+    cudaFreeHost(COOv);
+    cudaFreeHost(b);
+    cudaFreeHost(c);
+    #endif
+
+    #ifdef Managed
+    cudaFree(COOr);
+    cudaFree(COOc);
+    cudaFree(COOv);
+    cudaFree(b);
+    cudaFree(c);
     #endif
 
     #ifndef RAND
