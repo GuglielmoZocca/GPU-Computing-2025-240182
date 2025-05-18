@@ -15,6 +15,8 @@ In this section, the project's directory structure and the contents of each dire
   - include: contains the header for the time, print, mean and standard deviation library
   - src: contains the source code for the time, print, mean and standard deviation library
   - test_script: contain the test script for the test
+    * test_sortcvssortr.sh: test all solutions
+    * test_sortcvssortr_no_COO3.sh: test all solutions except COO3
   - test: contain the parsed result of the test
 * GPU: Directory for the GPU solution
   - makefile
@@ -37,9 +39,11 @@ To execute the test used for the paper follow this instructions:
 3. In case you want to test GPU solutions:
    1. Go to the GPU directory: `cd Path/to/GPU`
    2. Give the permission to the test script: `chmod +x ./test_script/test_sortcvssortr.sh`
-   3. Execute the script: `./test_script/test_sortcvssortr.sh`
-   4. When the test ended, the result can be found in `test/GPU_test_Complete.csv`
-   5. In case you can run Jupyter notebook, you can visualize some graphs related to the test through the notebook `../graph_report.ipynb`
+   3. Execute the test script: `./test_script/test_sortcvssortr.sh`
+      1. test all solutions (take some time because of COO3): `./test_script/test_sortcvssortr.sh`
+      2. test all solutions except COO3: `./test_script/test_sortcvssortr_no_COO3.sh`
+   5. When the test ended, the result can be found in `test/GPU_test_Complete.csv`
+   6. In case you can run Jupyter notebook, you can visualize some graphs related to the test through the notebook `../graph_report.ipynb`
 1. In case you want to test CPU solution:
    1. Go to the CPU directory: `cd Path/to/CPU`
    2. Give the permission to the test script: `chmod +x ./test_script/test_sortcvssortr.sh`
