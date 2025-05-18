@@ -15,8 +15,8 @@ In this section, the project's directory structure and the contents of each dire
   - include: contains the header for the time, print, mean and standard deviation library
   - src: contains the source code for the time, print, mean and standard deviation library
   - test_script: contain the test script for the test
-    * test_sortcvssortr.sh: test all solutions
-    * test_sortcvssortr_no_COO3.sh: test all solutions except COO3
+    + test_sortcvssortr.sh: test all solutions
+    + test_sortcvssortr_no_COO3.sh: test all solutions except COO3
   - test: contain the parsed result of the test
 * GPU: Directory for the GPU solution
   - makefile
