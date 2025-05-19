@@ -491,6 +491,7 @@ int main(int argc, char *argv[]) {
     int AI_A = sizeof(dtype)*4 + sizeof(int)*2;
     double AI = AI_O/AI_A; //Arithmetic intensity
 
+    //print test data
     printf("platf,matrix,id,n,m,nonZeros,Rand,sort,mu,sigma,nflop,nMemAc,AI_O,AI_A,AI,flops,effBand\n");
     printf("CPU,");
     #ifdef RAND

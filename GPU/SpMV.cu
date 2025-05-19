@@ -97,7 +97,7 @@ void multiplicationCOO1(int *COOC, dtype *COOV, dtype *V, int nonZ){
 
 }
 
-//GPU Matrix-Vector Multiplication with Row Reduction (GPU Kernel)
+//GPU Matrix-Vector Multiplication with Row Search and Reduction
 __global__
 void multiplicationCOO2(int *COOR, int *COOC, dtype *COOV, dtype *V, dtype *R, int nonZ){
     int i = blockIdx.x*blockDim.x+threadIdx.x;
@@ -857,6 +857,7 @@ int main(int argc, char *argv[]) {
     mu = mu_fn_sol(times, NITER);
     sigma = sigma_fn_sol(times, mu, NITER);
 
+    //print test data
     printf("platf,matrix,id,n,m,nonZeros,blockSize,Rand,memCopy,sort,mu,sigma,nflop,nMemAc,AI_O,AI_A,AI,Iperf,flops,effBand,RP\n");
     printf("GPU,");
     #ifdef RAND
@@ -971,7 +972,6 @@ int main(int argc, char *argv[]) {
     double AI = AI_O/AI_A;
 
     #endif
-
 
     printf("%d,%d,%d,%d,",n,m,nonZeros,threads);
     #ifdef RAND
