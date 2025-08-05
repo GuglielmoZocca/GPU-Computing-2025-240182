@@ -1,6 +1,6 @@
 # SPMV PROJECT
-
-## Directory structure
+## Deliverable_1
+### Directory structure
 
 In this section, the project's directory structure and the contents of each directory and file are explained:
 * graph_report.ipynb: It is a Jupyter notebook for the compilation of some data graph used by the report based on the test
@@ -31,7 +31,7 @@ In this section, the project's directory structure and the contents of each dire
   - test: contain the parsed results of the test
 
 
-## Test procedure
+### Test procedure
 
 To execute the test used for the paper follow this instructions:
 1. Clone the repository
@@ -53,7 +53,7 @@ To execute the test used for the paper follow this instructions:
    4. When the test ends, the result can be found in `test/CPU_test_Complete.csv`
    5. In case you can run Jupyter notebook, you can visualize some graphs related to the test through the notebook `../graph_report.ipynb`
 
-## Correctness check
+### Correctness check
 
 To check the correctness of the GPU solutions follow these instructions:
    1. Clone the repository
@@ -73,7 +73,7 @@ To check the correctness of the GPU solutions follow these instructions:
       * In the case appears `SUCCESS`, the solution is correct
       * In the case appears `FAILURE`, the solution is uncorrect
 
-## Random run
+### Random run
 
 To execute a solution with a random matrix follow these instruction:
 1. Clone the repository
