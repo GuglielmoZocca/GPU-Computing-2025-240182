@@ -168,14 +168,14 @@ To check the correctness of the GPU solutions follow these instructions:
 4. Load the required module: `module load CUDA/12.3.2`
 5. Remove the possible executable: `rm bin/SpMV`
 6. Execute `make` with the desired macros:
-  * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D Check"`
-  * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D Check"`
-  * COO_NEW_1 solution (where n is the block size, m is the number of the stream, k is the predicted max number of blocks): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D MAX_BLOCKS=k -D Check"`
+   * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D Check"`
+   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D Check"`
+   * COO_NEW_1 solution (where n is the block size, m is the number of the stream, k is the predicted max number of blocks): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D MAX_BLOCKS=k -D Check"`
 7. Execute the sbatch script with an integer matrix *.mtx (eg. Cities.mtx) and, only in COO_OLD case, the block size B (eg. 32): `sbatch sbatch_script.sh *.mtx B`
 8. Check in the directory `outputs` the output file with the id correspondent to the job executed
 9. In that file, besides the other test information there will be a field `SpMV verification:`
-  * In the case appears `SUCCESS`, the solution is correct
-  * In the case appears `FAILURE`, the solution is uncorrect
+   * In the case appears `SUCCESS`, the solution is correct
+   * In the case appears `FAILURE`, the solution is uncorrect
 
 ### Random run
 
