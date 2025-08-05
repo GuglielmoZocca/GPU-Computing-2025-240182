@@ -114,33 +114,30 @@ To execute a solution with a random matrix follow these instruction:
 ### Directory structure
 
 In this section, the project's directory structure and the contents of each directory and file are explained:
-* graph_report.ipynb: It is a Jupyter notebook for the compilation of some data graph used by the report based on the test
+* graph_script: directory for the graphs creation script
+  - graph_report.ipynb: it is a Jupyter notebook for the compilation of some data graph used by the report based on the test
 * matrix: it will contain the matrices used in the test
-* CPU: Directory for the CPU solution
-  - makefile
-  - sbatch_script.sh: sbatch script for a run of the CPU Solution with a matrix
-  - sbatch_script_rand.sh: sbatch script for a run of the CPU Solution with a random matrix
-  - sbatch_test.sh: sbatch script for the test
-  - Parse_script_out_CPU.py: python script for parse test results
-  - SpMV.c: c script for the CPU solution
-  - include: contains the header for the time, print, mean and standard deviation library
-  - src: contains the source code for the time, print, mean and standard deviation library
-  - test_script: contain the test script for the test
-  - test: contain the parsed results of the test
-* GPU: Directory for the GPU solutions
-  - makefile
+* makefile
+* sbatch_script: directory for the sbatch scripts 
   - sbatch_script.sh: sbatch script for a run of a GPU Solution with a matrix
   - sbatch_script_rand.sh: sbatch script for a run of a GPU Solution with a random matrix
   - sbatch_test.sh: sbatch script for the test
-  - Parse_script_out_GPU.py: python script for parse test results
-  - SpMV.cu: cu script for the GPU solutions
-  - include: contains the header for the time, print, mean and standard deviation library
-  - src: contains the source code for the time, print, mean and standard deviation library
-  - test_script: contain the test script for the test
-    + test_sortcvssortr.sh: test all solutions
-    + test_sortcvssortr_no_COO3.sh: test all solutions except COO3
-  - test: contain the parsed results of the test
-
+  - sbatch_test_ncu.sh: sbatch script for the ncu test
+  - sbatch_test_ncu_new_solution.sh: sbatch script for the ncu test of the new solution
+  - sbatch_test_nsys.sh: sbatch script for the nsys test
+  - sbatch_test_nsys_new_solution.sh: sbatch script for the nsys test of the new solution
+* python_script: directory for the python scripts utilized to parse the test data
+  - Parse_script_out.py: python script for parse test results
+  - Parse_ncu_report.py: python script for parse ncu test results
+  - Parse_statistics_report.py: python script for clean the output of Parse_ncu_report.py
+* test_script: directory for the test scripts
+  - test.sh: test of all solutions
+  - test_ncu.sh: test ncu of all solutions
+  - test_nsys.sh: test nsys of all solutions
+* test: directory for the parsed results of the normal, ncu and sys tests, and the ncu and nsys reports
+* SpMV.cu: cu script for the GPU solutions
+* include: directory for the headers for the time, print, mean, standard deviation library, sparse matrix analysis and utility functions
+* src: directory for the source code for some header files in include directory
 
 ### Test procedure
 
