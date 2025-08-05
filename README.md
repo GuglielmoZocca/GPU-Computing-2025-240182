@@ -162,22 +162,20 @@ To execute the tests used for the paper follow this instructions:
 ### Correctness check
 
 To check the correctness of the GPU solutions follow these instructions:
-   1. Clone the repository
-   2. Download the following matrices from [here](https://sparse.tamu.edu) in `matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, Hardesty2.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx, torso1.mtx
-   3. Go to the GPU directory: `cd Path/to/GPU`
-   4. Load the required module: `module load CUDA/12.3.2`
-   5. Remove the possible executable: `rm bin/SpMV`
-   6. Execute `make` with the desired macros:
-      * COO1 solution (sorted by row or by column): `make "MACROS=-D Managed -D COO1  (-D SortR or -D SortC) -D dtype=int -D Check"`
-      * COO2 solution: `make "MACROS=-D Pinned -D COO2 -D SortR -D dtype=int -D Check"`
-      * COO3 solution: `make "MACROS=-D Pinned -D COO3 -D SortR -D dtype=int -D Check"`
-      * COO4 solution (sorted by row or by column): `make "MACROS=-D Pinned -D COO4  (-D SortR or -D SortC) -D dtype=int -D Check"`
-      * COO5 solution (sorted by row or by column): `make "MACROS=-D Pinned -D COO5  (-D SortR or -D SortC) -D dtype=int -D Check"`
-   7. Execute the sbatch script with an integer matrix *.mtx (eg. Cities.mtx) and the block size B (eg. 32): `sbatch sbatch_script.sh *.mtx B`
-   8. Check in the directory `outputs` the output file with the id correspondent to the job executed
-   9. In that file, besides the other test information there will be a field `SpMV verification:`
-      * In the case appears `SUCCESS`, the solution is correct
-      * In the case appears `FAILURE`, the solution is uncorrect
+1. Clone the repository
+2. Download the following matrices from [here](https://sparse.tamu.edu) in `matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
+3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
+4. Load the required module: `module load CUDA/12.3.2`
+5. Remove the possible executable: `rm bin/SpMV`
+6. Execute `make` with the desired macros:
+  * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D Check"`
+  * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D Check"`
+  * COO_NEW_1 solution (where n is the block size, m is the number of the stream, k is the predicted max number of blocks): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D MAX_BLOCKS=k -D Check"`
+7. Execute the sbatch script with an integer matrix *.mtx (eg. Cities.mtx) and, only in COO_OLD case, the block size B (eg. 32): `sbatch sbatch_script.sh *.mtx B`
+8. Check in the directory `outputs` the output file with the id correspondent to the job executed
+9. In that file, besides the other test information there will be a field `SpMV verification:`
+  * In the case appears `SUCCESS`, the solution is correct
+  * In the case appears `FAILURE`, the solution is uncorrect
 
 ### Random run
 
