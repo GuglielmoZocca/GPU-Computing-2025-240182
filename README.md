@@ -141,25 +141,23 @@ In this section, the project's directory structure and the contents of each dire
 
 ### Test procedure
 
-To execute the test used for the paper follow this instructions:
+To execute the tests used for the paper follow this instructions:
 1. Clone the repository
-2. Download the following matrices from [here](https://sparse.tamu.edu) in `matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, Hardesty2.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx, torso1.mtx
-3. In case you want to test GPU solutions:
-   1. Go to the GPU directory: `cd Path/to/GPU`
-   2. Give the permission to the test scripts:
-      1. `chmod +x ./test_script/test_sortcvssortr.sh`
-      2. `chmod +x ./test_script/test_sortcvssortr_no_COO3.sh`
-   4. Execute the test script:
-      1. test all solutions (take some time because of COO3): `./test_script/test_sortcvssortr.sh`
-      2. test all solutions except COO3: `./test_script/test_sortcvssortr_no_COO3.sh`
-   5. When the test ends, the result can be found in `test/GPU_test_Complete.csv`
-   6. In case you can run Jupyter notebook, you can visualize some graphs related to the test through the notebook `../graph_report.ipynb`
-1. In case you want to test CPU solution:
-   1. Go to the CPU directory: `cd Path/to/CPU`
-   2. Give the permission to the test script: `chmod +x ./test_script/test_sortcvssortr.sh`
-   3. Execute the script: `./test_script/test_sortcvssortr.sh`
-   4. When the test ends, the result can be found in `test/CPU_test_Complete.csv`
-   5. In case you can run Jupyter notebook, you can visualize some graphs related to the test through the notebook `../graph_report.ipynb`
+2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
+3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
+4. Give the permission to the test scripts:
+  1. `chmod +x ./test_script/test.sh`
+  2. `chmod +x ./test_script/test_ncu.sh`
+  3. `chmod +x ./test_script/test_ncu.sh`
+5. Execute the test scripts, where n is the number of streams for the COO_NEW_1 solution:
+  1. normal test of all solutions: `./test_script/test.sh n`
+  2. ncu test of all solutions: `./test_script/test_ncu.sh n`
+  3. nsys test of all solutions: `./test_script/test_nsys.sh n`
+6. When the tests end, the results can be found as:
+  1. `test/GPU_test_Complete_n.csv` for the normal tests
+  2. `test/combined_ncu_report_new_n.csv` for the ncu tests
+  3. ncu and sys reports respectively in `test/report_ncu` and `test/report_nsys`
+7. In case you can run Jupyter notebook, you can visualize some graphs related to the tests through the notebook `graph_script/graph_report.ipynb`
 
 ### Correctness check
 
