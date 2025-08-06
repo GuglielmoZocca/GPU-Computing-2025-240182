@@ -198,6 +198,6 @@ To execute a solution with a random matrix follow these instruction:
    * Random seed (eg. 1)
 9. Check in the directory `outputs` the output file with the id correspondent to the job executed
 10. In that file, besides the other test information, if you have specified `-D Check` there will be a field `SpMV verification:`
-   * In the case appears `SUCCESS`, the solution is correct
-   * In the case appears `FAILURE`, the solution is uncorrect
+    * In the case appears `SUCCESS`, the solution is correct
+    * In the case appears `FAILURE`, the solution is uncorrect
 
