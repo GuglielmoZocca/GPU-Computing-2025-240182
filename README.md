@@ -187,9 +187,9 @@ To execute a solution with a random matrix follow these instruction:
 5. Remove the possible executable: `rm bin/SpMV`
 6. Execute `make` with the desired macros:
    * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D RAND"`
-   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D Check"`
+   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D RAND"`
    * COO_NEW_1 solution (where n is the block size and m is the number of the stream): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D RAND"`
-7. If you want check the correctness just insert `-D Check` and use integer matrix.
+7. If you want check the correctness just insert `-D Check`.
 8. Execute the sbatch script `sbatch sbatch_script_rand.sh` with the following arguments:
    * Number of matrix row
    * Number of matrix column
