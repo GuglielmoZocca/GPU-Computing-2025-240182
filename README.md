@@ -134,7 +134,7 @@ In this section, the project's directory structure and the contents of each dire
   - test.sh: test of all solutions
   - test_ncu.sh: test ncu of all solutions
   - test_nsys.sh: test nsys of all solutions
-* test: directory for the parsed results of the normal, ncu and sys tests, and the ncu and nsys reports
+* test: directory for the parsed results of the normal, ncu and sys tests, and the ncu and nsys reports (see some examples)
 * SpMV.cu: cu script for the GPU solutions
 * include: directory for the headers for the time, print, mean, standard deviation library, sparse matrix analysis and utility functions
 * src: directory for the source code for some header files in include directory
