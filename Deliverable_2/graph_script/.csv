@@ -1,0 +1,181 @@
+Metric_N,Metric_U,Metric_V,Solution,Sort,Matrix,BLOCK_SIZE_P
+Block Size,,,COO_OLD,SortC,BenElechi1.mtx,1024
+Function Cache Configuration,,,COO_OLD,SortC,BenElechi1.mtx,1024
+Grid Size,,,COO_OLD,SortC,BenElechi1.mtx,1024
+Registers Per Thread,register/thread,16.0,COO_OLD,SortC,BenElechi1.mtx,1024
+Shared Memory Configuration Size,Kbyte,32.77,COO_OLD,SortC,BenElechi1.mtx,1024
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortC,BenElechi1.mtx,1024
+Dynamic Shared Memory Per Block,Kbyte/block,8.19,COO_OLD,SortC,BenElechi1.mtx,1024
+Static Shared Memory Per Block,byte/block,0.0,COO_OLD,SortC,BenElechi1.mtx,1024
+# SMs,SM,56.0,COO_OLD,SortC,BenElechi1.mtx,1024
+Threads,thread,,COO_OLD,SortC,BenElechi1.mtx,1024
+Uses Green Context,,0.0,COO_OLD,SortC,BenElechi1.mtx,1024
+Waves Per SM,,58.41,COO_OLD,SortC,BenElechi1.mtx,1024
+Block Size,,512.0,COO_NEW_1,SortR,BenElechi1.mtx,512
+Function Cache Configuration,,,COO_NEW_1,SortR,BenElechi1.mtx,512
+Grid Size,,200.0,COO_NEW_1,SortR,BenElechi1.mtx,512
+Registers Per Thread,register/thread,24.0,COO_NEW_1,SortR,BenElechi1.mtx,512
+Shared Memory Configuration Size,Kbyte,65.54,COO_NEW_1,SortR,BenElechi1.mtx,512
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_NEW_1,SortR,BenElechi1.mtx,512
+Dynamic Shared Memory Per Block,byte/block,0.0,COO_NEW_1,SortR,BenElechi1.mtx,512
+Static Shared Memory Per Block,Kbyte/block,5.12,COO_NEW_1,SortR,BenElechi1.mtx,512
+# SMs,SM,56.0,COO_NEW_1,SortR,BenElechi1.mtx,512
+Threads,thread,,COO_NEW_1,SortR,BenElechi1.mtx,512
+Uses Green Context,,0.0,COO_NEW_1,SortR,BenElechi1.mtx,512
+Waves Per SM,,0.89,COO_NEW_1,SortR,BenElechi1.mtx,512
+Block Size,,256.0,Cusparse,SortR,BenElechi1.mtx,1
+Function Cache Configuration,,,Cusparse,SortR,BenElechi1.mtx,1
+Grid Size,,,Cusparse,SortR,BenElechi1.mtx,1
+Registers Per Thread,register/thread,32.0,Cusparse,SortR,BenElechi1.mtx,1
+Shared Memory Configuration Size,Kbyte,102.4,Cusparse,SortR,BenElechi1.mtx,1
+Driver Shared Memory Per Block,Kbyte/block,1.02,Cusparse,SortR,BenElechi1.mtx,1
+Dynamic Shared Memory Per Block,byte/block,0.0,Cusparse,SortR,BenElechi1.mtx,1
+Static Shared Memory Per Block,Kbyte/block,8.19,Cusparse,SortR,BenElechi1.mtx,1
+# SMs,SM,56.0,Cusparse,SortR,BenElechi1.mtx,1
+Threads,thread,,Cusparse,SortR,BenElechi1.mtx,1
+Uses Green Context,,0.0,Cusparse,SortR,BenElechi1.mtx,1
+Waves Per SM,,7.3,Cusparse,SortR,BenElechi1.mtx,1
+Block Size,,64.0,COO_OLD,SortR,degme.mtx,64
+Function Cache Configuration,,,COO_OLD,SortR,degme.mtx,64
+Grid Size,,,COO_OLD,SortR,degme.mtx,64
+Registers Per Thread,register/thread,16.0,COO_OLD,SortR,degme.mtx,64
+Shared Memory Configuration Size,Kbyte,65.54,COO_OLD,SortR,degme.mtx,64
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortR,degme.mtx,64
+Dynamic Shared Memory Per Block,byte/block,512.0,COO_OLD,SortR,degme.mtx,64
+Static Shared Memory Per Block,byte/block,0.0,COO_OLD,SortR,degme.mtx,64
+# SMs,SM,56.0,COO_OLD,SortR,degme.mtx,64
+Threads,thread,,COO_OLD,SortR,degme.mtx,64
+Uses Green Context,,0.0,COO_OLD,SortR,degme.mtx,64
+Waves Per SM,,70.87,COO_OLD,SortR,degme.mtx,64
+Block Size,,512.0,COO_NEW_1,SortR,degme.mtx,512
+Function Cache Configuration,,,COO_NEW_1,SortR,degme.mtx,512
+Grid Size,,200.0,COO_NEW_1,SortR,degme.mtx,512
+Registers Per Thread,register/thread,24.0,COO_NEW_1,SortR,degme.mtx,512
+Shared Memory Configuration Size,Kbyte,65.54,COO_NEW_1,SortR,degme.mtx,512
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_NEW_1,SortR,degme.mtx,512
+Dynamic Shared Memory Per Block,byte/block,0.0,COO_NEW_1,SortR,degme.mtx,512
+Static Shared Memory Per Block,Kbyte/block,5.12,COO_NEW_1,SortR,degme.mtx,512
+# SMs,SM,56.0,COO_NEW_1,SortR,degme.mtx,512
+Threads,thread,,COO_NEW_1,SortR,degme.mtx,512
+Uses Green Context,,0.0,COO_NEW_1,SortR,degme.mtx,512
+Waves Per SM,,0.89,COO_NEW_1,SortR,degme.mtx,512
+Block Size,,256.0,Cusparse,SortR,degme.mtx,1
+Function Cache Configuration,,,Cusparse,SortR,degme.mtx,1
+Grid Size,,,Cusparse,SortR,degme.mtx,1
+Registers Per Thread,register/thread,32.0,Cusparse,SortR,degme.mtx,1
+Shared Memory Configuration Size,Kbyte,102.4,Cusparse,SortR,degme.mtx,1
+Driver Shared Memory Per Block,Kbyte/block,1.02,Cusparse,SortR,degme.mtx,1
+Dynamic Shared Memory Per Block,byte/block,0.0,Cusparse,SortR,degme.mtx,1
+Static Shared Memory Per Block,Kbyte/block,8.19,Cusparse,SortR,degme.mtx,1
+# SMs,SM,56.0,Cusparse,SortR,degme.mtx,1
+Threads,thread,,Cusparse,SortR,degme.mtx,1
+Uses Green Context,,0.0,Cusparse,SortR,degme.mtx,1
+Waves Per SM,,8.86,Cusparse,SortR,degme.mtx,1
+Block Size,,128.0,COO_OLD,SortR,mawi_201512012345.mtx,128
+Function Cache Configuration,,,COO_OLD,SortR,mawi_201512012345.mtx,128
+Grid Size,,,COO_OLD,SortR,mawi_201512012345.mtx,128
+Registers Per Thread,register/thread,16.0,COO_OLD,SortR,mawi_201512012345.mtx,128
+Shared Memory Configuration Size,Kbyte,65.54,COO_OLD,SortR,mawi_201512012345.mtx,128
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortR,mawi_201512012345.mtx,128
+Dynamic Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortR,mawi_201512012345.mtx,128
+Static Shared Memory Per Block,byte/block,0.0,COO_OLD,SortR,mawi_201512012345.mtx,128
+# SMs,SM,56.0,COO_OLD,SortR,mawi_201512012345.mtx,128
+Threads,thread,,COO_OLD,SortR,mawi_201512012345.mtx,128
+Uses Green Context,,0.0,COO_OLD,SortR,mawi_201512012345.mtx,128
+Waves Per SM,,165.84,COO_OLD,SortR,mawi_201512012345.mtx,128
+Block Size,,,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Function Cache Configuration,,,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Grid Size,,200.0,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Registers Per Thread,register/thread,24.0,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Shared Memory Configuration Size,Kbyte,32.77,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Dynamic Shared Memory Per Block,byte/block,0.0,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Static Shared Memory Per Block,Kbyte/block,10.24,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+# SMs,SM,56.0,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Threads,thread,,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Uses Green Context,,0.0,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Waves Per SM,,1.79,COO_NEW_1,SortR,mawi_201512012345.mtx,1024
+Block Size,,256.0,Cusparse,SortR,mawi_201512012345.mtx,1
+Function Cache Configuration,,,Cusparse,SortR,mawi_201512012345.mtx,1
+Grid Size,,,Cusparse,SortR,mawi_201512012345.mtx,1
+Registers Per Thread,register/thread,32.0,Cusparse,SortR,mawi_201512012345.mtx,1
+Shared Memory Configuration Size,Kbyte,102.4,Cusparse,SortR,mawi_201512012345.mtx,1
+Driver Shared Memory Per Block,Kbyte/block,1.02,Cusparse,SortR,mawi_201512012345.mtx,1
+Dynamic Shared Memory Per Block,byte/block,0.0,Cusparse,SortR,mawi_201512012345.mtx,1
+Static Shared Memory Per Block,Kbyte/block,8.19,Cusparse,SortR,mawi_201512012345.mtx,1
+# SMs,SM,56.0,Cusparse,SortR,mawi_201512012345.mtx,1
+Threads,thread,,Cusparse,SortR,mawi_201512012345.mtx,1
+Uses Green Context,,0.0,Cusparse,SortR,mawi_201512012345.mtx,1
+Waves Per SM,,20.73,Cusparse,SortR,mawi_201512012345.mtx,1
+Block Size,,128.0,COO_OLD,SortR,rail2586.mtx,128
+Function Cache Configuration,,,COO_OLD,SortR,rail2586.mtx,128
+Grid Size,,,COO_OLD,SortR,rail2586.mtx,128
+Registers Per Thread,register/thread,16.0,COO_OLD,SortR,rail2586.mtx,128
+Shared Memory Configuration Size,Kbyte,65.54,COO_OLD,SortR,rail2586.mtx,128
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortR,rail2586.mtx,128
+Dynamic Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortR,rail2586.mtx,128
+Static Shared Memory Per Block,byte/block,0.0,COO_OLD,SortR,rail2586.mtx,128
+# SMs,SM,56.0,COO_OLD,SortR,rail2586.mtx,128
+Threads,thread,,COO_OLD,SortR,rail2586.mtx,128
+Uses Green Context,,0.0,COO_OLD,SortR,rail2586.mtx,128
+Waves Per SM,,69.85,COO_OLD,SortR,rail2586.mtx,128
+Block Size,,,COO_NEW_1,SortR,rail2586.mtx,1024
+Function Cache Configuration,,,COO_NEW_1,SortR,rail2586.mtx,1024
+Grid Size,,200.0,COO_NEW_1,SortR,rail2586.mtx,1024
+Registers Per Thread,register/thread,24.0,COO_NEW_1,SortR,rail2586.mtx,1024
+Shared Memory Configuration Size,Kbyte,32.77,COO_NEW_1,SortR,rail2586.mtx,1024
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_NEW_1,SortR,rail2586.mtx,1024
+Dynamic Shared Memory Per Block,byte/block,0.0,COO_NEW_1,SortR,rail2586.mtx,1024
+Static Shared Memory Per Block,Kbyte/block,10.24,COO_NEW_1,SortR,rail2586.mtx,1024
+# SMs,SM,56.0,COO_NEW_1,SortR,rail2586.mtx,1024
+Threads,thread,,COO_NEW_1,SortR,rail2586.mtx,1024
+Uses Green Context,,0.0,COO_NEW_1,SortR,rail2586.mtx,1024
+Waves Per SM,,1.79,COO_NEW_1,SortR,rail2586.mtx,1024
+Block Size,,256.0,Cusparse,SortR,rail2586.mtx,1
+Function Cache Configuration,,,Cusparse,SortR,rail2586.mtx,1
+Grid Size,,,Cusparse,SortR,rail2586.mtx,1
+Registers Per Thread,register/thread,32.0,Cusparse,SortR,rail2586.mtx,1
+Shared Memory Configuration Size,Kbyte,102.4,Cusparse,SortR,rail2586.mtx,1
+Driver Shared Memory Per Block,Kbyte/block,1.02,Cusparse,SortR,rail2586.mtx,1
+Dynamic Shared Memory Per Block,byte/block,0.0,Cusparse,SortR,rail2586.mtx,1
+Static Shared Memory Per Block,Kbyte/block,8.19,Cusparse,SortR,rail2586.mtx,1
+# SMs,SM,56.0,Cusparse,SortR,rail2586.mtx,1
+Threads,thread,,Cusparse,SortR,rail2586.mtx,1
+Uses Green Context,,0.0,Cusparse,SortR,rail2586.mtx,1
+Waves Per SM,,8.73,Cusparse,SortR,rail2586.mtx,1
+Block Size,,128.0,COO_OLD,SortC,specular.mtx,128
+Function Cache Configuration,,,COO_OLD,SortC,specular.mtx,128
+Grid Size,,,COO_OLD,SortC,specular.mtx,128
+Registers Per Thread,register/thread,16.0,COO_OLD,SortC,specular.mtx,128
+Shared Memory Configuration Size,Kbyte,65.54,COO_OLD,SortC,specular.mtx,128
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortC,specular.mtx,128
+Dynamic Shared Memory Per Block,Kbyte/block,1.02,COO_OLD,SortC,specular.mtx,128
+Static Shared Memory Per Block,byte/block,0.0,COO_OLD,SortC,specular.mtx,128
+# SMs,SM,56.0,COO_OLD,SortC,specular.mtx,128
+Threads,thread,,COO_OLD,SortC,specular.mtx,128
+Uses Green Context,,0.0,COO_OLD,SortC,specular.mtx,128
+Waves Per SM,,66.68,COO_OLD,SortC,specular.mtx,128
+Block Size,,512.0,COO_NEW_1,SortR,specular.mtx,512
+Function Cache Configuration,,,COO_NEW_1,SortR,specular.mtx,512
+Grid Size,,200.0,COO_NEW_1,SortR,specular.mtx,512
+Registers Per Thread,register/thread,24.0,COO_NEW_1,SortR,specular.mtx,512
+Shared Memory Configuration Size,Kbyte,65.54,COO_NEW_1,SortR,specular.mtx,512
+Driver Shared Memory Per Block,Kbyte/block,1.02,COO_NEW_1,SortR,specular.mtx,512
+Dynamic Shared Memory Per Block,byte/block,0.0,COO_NEW_1,SortR,specular.mtx,512
+Static Shared Memory Per Block,Kbyte/block,5.12,COO_NEW_1,SortR,specular.mtx,512
+# SMs,SM,56.0,COO_NEW_1,SortR,specular.mtx,512
+Threads,thread,,COO_NEW_1,SortR,specular.mtx,512
+Uses Green Context,,0.0,COO_NEW_1,SortR,specular.mtx,512
+Waves Per SM,,0.89,COO_NEW_1,SortR,specular.mtx,512
+Block Size,,256.0,Cusparse,SortR,specular.mtx,1
+Function Cache Configuration,,,Cusparse,SortR,specular.mtx,1
+Grid Size,,,Cusparse,SortR,specular.mtx,1
+Registers Per Thread,register/thread,32.0,Cusparse,SortR,specular.mtx,1
+Shared Memory Configuration Size,Kbyte,102.4,Cusparse,SortR,specular.mtx,1
+Driver Shared Memory Per Block,Kbyte/block,1.02,Cusparse,SortR,specular.mtx,1
+Dynamic Shared Memory Per Block,byte/block,0.0,Cusparse,SortR,specular.mtx,1
+Static Shared Memory Per Block,Kbyte/block,8.19,Cusparse,SortR,specular.mtx,1
+# SMs,SM,56.0,Cusparse,SortR,specular.mtx,1
+Threads,thread,,Cusparse,SortR,specular.mtx,1
+Uses Green Context,,0.0,Cusparse,SortR,specular.mtx,1
+Waves Per SM,,8.34,Cusparse,SortR,specular.mtx,1
