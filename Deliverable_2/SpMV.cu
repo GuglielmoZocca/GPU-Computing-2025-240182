@@ -12,14 +12,14 @@
 #include "include/time_lib.h"
 #include "include/utils.h"
 
-#define NITER 10
+#define NITER 10 //number of iterations test
 
-#define dtype float
+#define dtype float //Type of the data
 
 #define PFP32 10300 //Peak FP32 Compute Performance
 #define MB 933 //Peak Memory Bandwidth
 
-#define WARP_SIZE 32
+#define WARP_SIZE 32 //dimension of the warp
 
 #if !defined(COO_OLD) && !defined(COO_CUSPARSE) && !defined(COO_NEW_1)
 #error "The algorithm is not defined (COO, COO_CUSPARSE,COO_NEW_1)"
@@ -77,9 +77,9 @@ void multiplicationCOOCPU(int *COOR, int *COOC, dtype *COOV, dtype *V, dtype *R,
 //Deliverable 1 GPU SpMV Shared Memory Optimized Solution
 __global__
 void multiplicationCOO_OLD(int *COOR, int *COOC, dtype *COOV,dtype *V, dtype *R, int nnz) {
-	extern __shared__ char shared_mem[];
-	int *s_rows = (int*)shared_mem;
-	dtype *s_vals = (dtype*)&s_rows[blockDim.x];
+	extern __shared__ char shared_mem[]; //dynamically allocated shared memory
+	int *s_rows = (int*)shared_mem; //shared memory of rows
+	dtype *s_vals = (dtype*)&s_rows[blockDim.x]; //shared memory of multiplied values
 
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	int local_tid = threadIdx.x;
@@ -90,11 +90,13 @@ void multiplicationCOO_OLD(int *COOR, int *COOC, dtype *COOV,dtype *V, dtype *R,
 	s_vals[local_tid] = COOV[tid]*V[COOC[tid]];
 	__syncthreads();
 
+    //the reduction part is done by the thread at the limit of row and block
 	if (local_tid > 0 && s_rows[local_tid] == s_rows[local_tid - 1]) return;
 
 	dtype sum = s_vals[local_tid];
 	int row = s_rows[local_tid];
 
+    //accumulate the values until the corripsondent row or block is ended
 	for (int i = local_tid + 1; i < blockDim.x && tid + (i - local_tid) < nnz; i++) {
 		if (s_rows[i] == row) {
 			sum += s_vals[i];
@@ -110,13 +112,13 @@ void multiplicationCOO_OLD(int *COOR, int *COOC, dtype *COOV,dtype *V, dtype *R,
 
 #define MAX_BLOCKS 200
 
-//Kernel to process the last elements in COO_NEW_1 solution
+//Kernel to process the last elements in COO_NEW_1 solution (NEW version of the third Kernel)
 __launch_bounds__(BLOCK_SIZE,1)
 __global__ void
 spmv_coo_kernel_shared(const int *COOR,const int *COOC,const dtype *COOV,const dtype *V, dtype *R, int nnz) {
-	extern __shared__ char shared_mem[];
-	int *s_rows = (int*)shared_mem;
-	dtype *s_vals = (dtype*)&s_rows[blockDim.x];
+	extern __shared__ char shared_mem[]; //dynamically allocated shared memory
+	int *s_rows = (int*)shared_mem; //shared memory of rows
+	dtype *s_vals = (dtype*)&s_rows[blockDim.x]; //shared memory of multiplied values
 
 	int tid = threadIdx.x + blockIdx.x * blockDim.x;
 	int local_tid = threadIdx.x;
@@ -127,11 +129,13 @@ spmv_coo_kernel_shared(const int *COOR,const int *COOC,const dtype *COOV,const d
 	s_vals[local_tid] = __ldg(&COOV[tid])*__ldg(&V[__ldg(&COOC[tid])]);
 	__syncthreads();
 
+    //the reduction part is done by the thread at the limit of row and block
 	if (local_tid > 0 && s_rows[local_tid] == s_rows[local_tid - 1]) return;
 
 	dtype sum = s_vals[local_tid];
 	int row = s_rows[local_tid];
 
+    //accumulate the values until the corripsondent row or block is ended
 	for (int i = local_tid + 1; i < blockDim.x && tid + (i - local_tid) < nnz; i++) {
 		if (s_rows[i] == row) {
 			sum += s_vals[i];
@@ -160,9 +164,10 @@ __device__ void segreduce_block(const int * idx, dtype * val)
     if( threadIdx.x >= 512 && row == idx[threadIdx.x - 512] ) { left = val[threadIdx.x - 512]; } __syncthreads(); val[threadIdx.x] += left; left = 0; __syncthreads();
 }
 
+//NEW warp-level segmented scan & reduction (First Kernel of the COO_NEW_1)
 __launch_bounds__(BLOCK_SIZE,1)
 __global__ void
-spmv_coo_flat_kernel_old_atomic(const int num_nonzeros,
+spmv_coo_flat_kernel_old_atomic(const int tail,
                      const int interval_size,
                      const int * I,
                      const int * J,
@@ -177,11 +182,11 @@ spmv_coo_flat_kernel_old_atomic(const int num_nonzeros,
 
 
     const int thread_id   = BLOCK_SIZE * blockIdx.x + threadIdx.x;                         // global thread index
-    const int thread_lane = threadIdx.x & (WARP_SIZE-1);                                   // thread index within the warp
-    const int warp_id     = thread_id>>5;//thread_id/WARP_SIZE;                                       // global warp index
+    const int thread_lane = threadIdx.x & (WARP_SIZE-1); //threadIdx.x%WARP_SIZE                            // thread index within the warp
+    const int warp_id     = thread_id>>5; //thread_id/WARP_SIZE;                                       // global warp index
 
     const int interval_begin = warp_id * interval_size;                                    // warp's offset into I,J,V
-    const int interval_end   = ((interval_begin + interval_size) > num_nonzeros) ? num_nonzeros : (interval_begin + interval_size); // end of warps's work
+    const int interval_end   = ((interval_begin + interval_size) > tail) ? tail : (interval_begin + interval_size); // end of warps's work
 
     const int idx = 16 * ((threadIdx.x>>5) + 1) + threadIdx.x;                        // thread's index into padded rows array
 
@@ -190,8 +195,8 @@ spmv_coo_flat_kernel_old_atomic(const int num_nonzeros,
     if(interval_begin >= interval_end)                                                           // warp has no work to do
         return;
 
-   	int row_start = I[0]; //first row considerated int stream
-    int row_end   = I[num_nonzeros-1]; //last row considerated int stream
+   	int row_start = I[0]; //first row considerated in the stream
+    int row_end   = I[tail-1]; //last row considerated in the stream
 
     if (thread_lane == 31)
     {
@@ -208,9 +213,10 @@ spmv_coo_flat_kernel_old_atomic(const int num_nonzeros,
 
         if (thread_lane == 0)
         {
-            //reduce part
+
+          	// row continues
             if(row == rows[idx + 31]){
-                val += vals[threadIdx.x + 31];                        // row continues
+                val += vals[threadIdx.x + 31];
             }else{// row terminated
               	if(rows[idx + 31] != row_start && rows[idx + 31] != row_end){
                 	y[rows[idx + 31]] += vals[threadIdx.x + 31];
@@ -231,14 +237,14 @@ spmv_coo_flat_kernel_old_atomic(const int num_nonzeros,
         if(row == rows[idx -  8]) { vals[threadIdx.x] = val = val + vals[threadIdx.x -  8]; }
         if(row == rows[idx - 16]) { vals[threadIdx.x] = val = val + vals[threadIdx.x - 16]; }
 
-        //reduce part
-        if(thread_lane < 31 && row != rows[idx + 1]){
+
+        if(thread_lane < 31 && row != rows[idx + 1]){// row terminated
           if(row != row_start && row != row_end){
-                	y[row] += vals[threadIdx.x];  // row terminated
+                	y[row] += vals[threadIdx.x];
 			}else{
                     atomicAdd(&y[row], vals[threadIdx.x]);
 			}
-        }// row terminated
+        }
     }
 
     if(thread_lane == 31)
@@ -249,9 +255,10 @@ spmv_coo_flat_kernel_old_atomic(const int num_nonzeros,
     }
 }
 
+//BASE warp-level segmented scan & reduction (First Kernel of the COO_NEW_1)
 __launch_bounds__(BLOCK_SIZE,1)
 __global__ void
-spmv_coo_flat_kernel_old(const int num_nonzeros,
+spmv_coo_flat_kernel_old(const int tail,
                      const int interval_size,
                      const int * I,
                      const int * J,
@@ -270,7 +277,7 @@ spmv_coo_flat_kernel_old(const int num_nonzeros,
     const int warp_id     = thread_id>>5;//thread_id/WARP_SIZE;                                       // global warp index
 
     const int interval_begin = warp_id * interval_size;                                    // warp's offset into I,J,V
-    const int interval_end   = ((interval_begin + interval_size) > num_nonzeros) ? num_nonzeros : (interval_begin + interval_size); //thrust::min(interval_begin + interval_size, num_nonzeros);  // end of warps's work
+    const int interval_end   = ((interval_begin + interval_size) > tail) ? tail : (interval_begin + interval_size);  // end of warps's work
 
     const int idx = 16 * ((threadIdx.x>>5) + 1) + threadIdx.x; //  threadIdx.x/32                          // thread's index into padded rows array
 
@@ -294,11 +301,11 @@ spmv_coo_flat_kernel_old(const int num_nonzeros,
 
         if (thread_lane == 0)
         {
-            //reduce part
+            // row continues
             if(row == rows[idx + 31]){
-                val += vals[threadIdx.x + 31];                        // row continues
-            }else{
-                	y[rows[idx + 31]] += vals[threadIdx.x + 31];  // row terminated
+                val += vals[threadIdx.x + 31];
+            }else{// row terminated
+                	y[rows[idx + 31]] += vals[threadIdx.x + 31];
 
             }
 
@@ -314,13 +321,13 @@ spmv_coo_flat_kernel_old(const int num_nonzeros,
         if(row == rows[idx -  8]) { vals[threadIdx.x] = val = val + vals[threadIdx.x -  8]; }
         if(row == rows[idx - 16]) { vals[threadIdx.x] = val = val + vals[threadIdx.x - 16]; }
 
-        //reduce part
+        // row terminated
         if(thread_lane < 31 && row != rows[idx + 1]){
 
-                	y[row] += vals[threadIdx.x];  // row terminated
+                	y[row] += vals[threadIdx.x];
 
 
-        }// row terminated
+        }
     }
 
     if(thread_lane == 31)
@@ -332,7 +339,7 @@ spmv_coo_flat_kernel_old(const int num_nonzeros,
 }
 
 
-// The second level of the segmented reduction operation
+//NEW block-level segmented scan and reduction (Second Kernel of the COO_NEW_1)
 __launch_bounds__(BLOCK_SIZE,1)
 __global__ void
 spmv_coo_reduce_update_kernel_mult_block(const int num_warps,
@@ -341,21 +348,22 @@ spmv_coo_reduce_update_kernel_mult_block(const int num_warps,
                                     dtype * y)
 {
     __shared__ int rows[BLOCK_SIZE + 1]; //shared memory of the rows
-    __shared__ dtype vals[BLOCK_SIZE + 1]; //shared memory of the vals
+    __shared__ dtype vals[BLOCK_SIZE + 1]; //shared memory of the multiplied values
 
     const int end = blockIdx.x*BLOCK_SIZE + BLOCK_SIZE;  //id of the ending element in the block
 
     if (threadIdx.x == 0)
     {
-      	//End point of the processing
+      	//end point of the processing
         rows[BLOCK_SIZE] = (int) -1;
         vals[BLOCK_SIZE] = (dtype)  0;
     }
 
     __syncthreads();
 
-    int i = blockIdx.x*BLOCK_SIZE + threadIdx.x;
+    int i = blockIdx.x*BLOCK_SIZE + threadIdx.x; //thread id
 
+    //The part of elements considerated fit the entire block
 	if (end <= num_warps){
 
     rows[threadIdx.x] = __ldg(&temp_rows[i]);
@@ -363,6 +371,7 @@ spmv_coo_reduce_update_kernel_mult_block(const int num_warps,
 
     __syncthreads();
 
+    //prefix sum of the input elements in a block
     segreduce_block(rows, vals);
 
     // row terminated
@@ -371,25 +380,28 @@ spmv_coo_reduce_update_kernel_mult_block(const int num_warps,
 
 
 
-    } else {
+    } else {//The part of elements considerated fit a part of the block
         if (i < num_warps){
             rows[threadIdx.x] = __ldg(&temp_rows[i]);
             vals[threadIdx.x] = __ldg(&temp_vals[i]);
         } else {
+          	//end point of the processing
             rows[threadIdx.x] = (int) -1;
             vals[threadIdx.x] = (dtype)  0;
         }
 
         __syncthreads();
 
+        //prefix sum of the input elements in a block
         segreduce_block(rows, vals);
 
         if (i < num_warps)
-            if (rows[threadIdx.x] != rows[threadIdx.x + 1]) // row terminated
+            if (rows[threadIdx.x] != rows[threadIdx.x + 1])
               atomicAdd(&y[rows[threadIdx.x]], vals[threadIdx.x]);
     }
 }
 
+//BASE block-level segmented scan and reduction (Second Kernel of the COO_NEW_1)
 __launch_bounds__(BLOCK_SIZE,1)
 __global__ void
 spmv_coo_reduce_update_kernel_one_block(const int num_warps,
@@ -397,14 +409,14 @@ spmv_coo_reduce_update_kernel_one_block(const int num_warps,
                               const dtype * temp_vals,
                                     dtype * y)
 {
-    __shared__ int rows[BLOCK_SIZE + 1];
-    __shared__ dtype vals[BLOCK_SIZE + 1];
+    __shared__ int rows[BLOCK_SIZE + 1]; //shared memory of the rows
+    __shared__ dtype vals[BLOCK_SIZE + 1]; //shared memory of the multiplied values
 
     const int end = num_warps - (num_warps & (BLOCK_SIZE - 1)); //do not considerate the elements that don't fit in a block
 
     if (threadIdx.x == 0)
     {
-      	//End point of the processing
+      	//end point of the processing
         rows[BLOCK_SIZE] = (int) -1;
         vals[BLOCK_SIZE] = (dtype)  0;
     }
@@ -420,6 +432,7 @@ spmv_coo_reduce_update_kernel_one_block(const int num_warps,
 
         __syncthreads();
 
+        //prefix sum of the input elements in a block
         segreduce_block(rows, vals);
 
         // row terminated
@@ -437,21 +450,23 @@ spmv_coo_reduce_update_kernel_one_block(const int num_warps,
             rows[threadIdx.x] = temp_rows[i];
             vals[threadIdx.x] = temp_vals[i];
         } else {
+          	//end point of the processing
             rows[threadIdx.x] = (int) -1;
             vals[threadIdx.x] = (dtype)  0;
         }
 
         __syncthreads();
 
+        //prefix sum of the input elements in a block
         segreduce_block(rows, vals);
 
         if (i < num_warps)
-            if (rows[threadIdx.x] != rows[threadIdx.x + 1]) // row terminated
+            if (rows[threadIdx.x] != rows[threadIdx.x + 1])
                 y[rows[threadIdx.x]] += vals[threadIdx.x];
     }
 }
 
-//Serial kernel to process the last elements in COO_NEW_1 solution
+//Serial kernel to process the last elements in COO_NEW_1 solution (Base version of the third kernel)
 __launch_bounds__(1,1)
 __global__ void
 spmv_coo_serial_kernel(const int num_entries,
@@ -469,13 +484,13 @@ spmv_coo_serial_kernel(const int num_entries,
     }
 }
 
-
+//GPU SpMV COO_NEW Solution
 double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X, dtype *R, int nonZ)
 {
 
-    const int * I = COOR;
-    const int * J = COOC;
-    const dtype * V = COOV;
+    const int * I = COOR; //rows inidices
+    const int * J = COOC; //column indices
+    const dtype * V = COOV; //values vector
 
     if(nonZ == 0)
     {
@@ -507,11 +522,12 @@ double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X
 
     const unsigned int active_warps = (interval_size == 0) ? 0 : ((tail + (interval_size - 1)) / interval_size); //number of processing warps
 
-    int* temp_rows[N_STREAM];
+    int* temp_rows[N_STREAM]; //temporary rows vector
     dtype*   temp_vals[N_STREAM]; //product of the first level of reduction
 
     unsigned int step = 0; //variable to accumulate the elements processed by a stream
 
+    //stream and temporary vectors instantiation
  	cudaStream_t stream[N_STREAM];
 	for(int i = 0; i < N_STREAM; i++){
 		cudaStreamCreateWithFlags(&stream[i], cudaStreamNonBlocking);
@@ -521,28 +537,32 @@ double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X
 
     #ifndef EVAL_NCU
 
+    //event instantiation
     cudaEvent_t starto0, stopo0;
     float millisec0;
     cudaEventCreate(&starto0);
     cudaEventCreate(&stopo0);
 	#endif
 
-    int blocks;
-    int threads;
-    size_t sharedMemSize;
+    int blocks; //number of block of third kernel
+    int threads; //number of threads of third kernel
+    size_t sharedMemSize; //shared memory size of the third kernel
 
     #ifndef EVAL_NCU
     cudaEventRecord(starto0);
     #endif
 
+    //iterate on every streams
     for(int w = 0; w < N_STREAM; w++){
 
+      	//warp-level segmented scan & reduction (First Kernel of the COO_NEW_1)
 		if(N_STREAM == 1){ //don't need an atomic with a single stream
     		spmv_coo_flat_kernel_old<<<num_blocks, BLOCK_SIZE,0,stream[w]>>>(tail, interval_size, I + step, J + step, V + step, X, R,temp_rows[w], temp_vals[w]);
         } else {
         	spmv_coo_flat_kernel_old_atomic<<<num_blocks, BLOCK_SIZE,0,stream[w]>>>(tail, interval_size, I + step, J + step, V + step, X, R,temp_rows[w], temp_vals[w]);
         }
 
+        //block-level segmented scan and reduction (Second Kernel of the COO_NEW_1)
         if(N_STREAM == 1){ //don't need an atomic with a single stream
 			spmv_coo_reduce_update_kernel_one_block<<<1, BLOCK_SIZE,0,stream[w]>>>(active_warps, temp_rows[w], temp_vals[w], R);
 		} else {
@@ -550,7 +570,7 @@ double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X
         	spmv_coo_reduce_update_kernel_mult_block<<<blocks, BLOCK_SIZE,0,stream[w]>>>(active_warps, temp_rows[w], temp_vals[w], R);
 		}
 
-
+		//kernel to process the last elements in COO_NEW_1 solution
         if(w == (N_STREAM-1)){ //the last stream must considerate the missing elements from the division in stream: nonZ - (nonZ/N_STREAM)*N_STREAM
     		if(BLOCK_SIZE > ((part - tail) + (nonZ - (step + part)))){
         		threads = (part - tail) + (nonZ - (step + part));
@@ -562,7 +582,7 @@ double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X
 
     		sharedMemSize = threads * sizeof(int) + threads * sizeof(dtype);
 
-        	if(N_STREAM == 1){
+        	if(N_STREAM == 1){//don't need an atomic with a single stream
         		spmv_coo_serial_kernel<<<1,1>>>((part - tail) + (nonZ - (step + part)),I + tail + step, J + tail + step, V + tail + step, X, R);
             } else {
             	spmv_coo_kernel_shared<<<blocks,threads,sharedMemSize,stream[w]>>>(I + tail + step, J + tail + step, V + tail + step, X, R,(part - tail) + (nonZ - (step + part)));
@@ -583,6 +603,7 @@ double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X
             spmv_coo_kernel_shared<<<blocks,threads,sharedMemSize,stream[w]>>>( I + tail + step, J + tail + step, V + tail + step, X, R,part - tail);
         }
 
+        //next matrix part for the next stream
         step += part;
 
     }
@@ -597,6 +618,8 @@ double multiplicationCOO_NEW_1(int *COOR, int *COOC, dtype *COOV, const dtype *X
     cudaEventSynchronize(stopo0);
 
     cudaEventElapsedTime(&millisec0, starto0,stopo0);
+
+    //time of the entire spmv process
     double iter_time = millisec0 / 1.e3;
     #endif
 
@@ -625,7 +648,6 @@ int main(int argc, char* argv[]) {
     #ifdef RAND
 
   	//Capture input parameters
-
     #if defined(COO_CUSPARSE) || defined(EVAL_NCU) || defined(COO_NEW_1)
     if (argc < 5) {
     printf("Usage: %s n m nonZero code\n", argv[0]);
@@ -717,6 +739,7 @@ int main(int argc, char* argv[]) {
 
 	mm_read_banner(fp, &matcode);
 
+    //don't process complex matrix
     if(mm_is_complex(matcode)) {
 
       printf("Cannot process complex matrix\n");
@@ -745,7 +768,7 @@ int main(int argc, char* argv[]) {
     //Determinate the block and grid size
 	int threads; //Block size
     int blocks; //Grid size
-    size_t sharedMemSize;
+    size_t sharedMemSize; //shared memory size of the COO_OLD solution
 
     #if defined(COO_OLD)
 	#ifndef EVAL_NCU
@@ -779,11 +802,12 @@ int main(int argc, char* argv[]) {
     init_matrixI(1, nonZeros, COOr, n);
     init_matrixI(1, nonZeros, COOc, m);
     init_matrixV<dtype>(1, nonZeros, COOv, 0);
+    //initialize the matrix with random values
     initialize_random_coo<dtype>(COOr, COOc, COOv, nonZeros, n, m,code);
 
     #else
 
-    //initialize the different structures with the file data
+    //initialize the different COO structures with the file data
 	int ret_code = mtx_to_COO(fp,COOr,COOc,COOv,nonZeros,size,matcode);
     if(ret_code == 1){
     	return 1;
@@ -792,18 +816,18 @@ int main(int argc, char* argv[]) {
 
     #ifdef SortR
     printf("SortR\n");
-    sort_cooR<dtype>(COOr,COOc,COOv,nonZeros);
+    sort_cooR<dtype>(COOr,COOc,COOv,nonZeros); //sort the matrix by row
     #endif
     #ifdef SortC
     printf("SortC\n");
-    sort_cooC<dtype>(COOr,COOc,COOv,nonZeros);
+    sort_cooC<dtype>(COOr,COOc,COOv,nonZeros);//sort the matrix by column
     #endif
 
     //initialize the matrix
     init_matrixV<dtype>(1,n,c,0);
 
+    //initialiaze the input vector
     #ifndef RAND
-    //initialiaze the vector
     if (mm_is_integer(matcode)) {
         for (i=0; i<m; i++) {
             b[i] = 1;
@@ -877,7 +901,7 @@ int main(int argc, char* argv[]) {
     printf("calculate moltiplication\n");
 
     #if defined(COO_CUSPARSE)
-    // Execute SpMV
+    // Execute CUSPARSE SpMV
     CHECK_CUSPARSE(cusparseSpMV(
     handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     &alpha, matA, vecX, &beta, vecY,
@@ -887,6 +911,7 @@ int main(int argc, char* argv[]) {
 
     #if defined(COO_NEW_1)
 
+    // Execute COO_NEW_1 SpMV
     multiplicationCOO_NEW_1(d_COOr,d_COOc, d_COOv, d_b, d_c, nonZeros);
 
     #endif
@@ -894,6 +919,7 @@ int main(int argc, char* argv[]) {
 
     #ifdef COO_OLD
 
+    // Execute COO_OLD SpMV
     sharedMemSize = threads * sizeof(int) + threads * sizeof(dtype);
 	multiplicationCOO_OLD<<<blocks,threads,sharedMemSize>>>(d_COOr,d_COOc, d_COOv, d_b, d_c, nonZeros);
 
@@ -994,6 +1020,7 @@ int main(int argc, char* argv[]) {
         sprintf(str,"%d %d %d", 1,1,k);
         nvtxRangePushA(concat(concat(concat("Cusparse SortC ",argv[1])," "),str));
         #endif
+        // Execute CUSPARSE SpMV
     	CHECK_CUSPARSE(cusparseSpMV(
     	handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
     	&alpha, matA, vecX, &beta, vecY,
@@ -1015,6 +1042,7 @@ int main(int argc, char* argv[]) {
         sprintf(str,"%d %d %d", 1,threads,k);
         nvtxRangePushA(concat(concat(concat("COO_OLD SortC ",argv[1])," "),str));
         #endif
+        // Execute COO_OLD SpMV
 		multiplicationCOO_OLD<<<blocks,threads,sharedMemSize>>>(d_COOr,d_COOc, d_COOv, d_b, d_c, nonZeros);
         #if defined(EVAL_NCU)
         nvtxRangePop();
@@ -1027,7 +1055,7 @@ int main(int argc, char* argv[]) {
         sprintf(str,"%d %d %d", N_STREAM,BLOCK_SIZE,k);
         nvtxRangePushA(concat(concat(concat("COO_NEW_1 SortR ",argv[1])," "),str));
         #endif
-
+		// Execute COO_NEW_1 SpMV
 		double i_time = multiplicationCOO_NEW_1(d_COOr,d_COOc, d_COOv, d_b, d_c, nonZeros);
         #if defined(EVAL_NCU)
         nvtxRangePop();
@@ -1039,6 +1067,7 @@ int main(int argc, char* argv[]) {
         cudaEventRecord(stop);
         cudaEventSynchronize(stop);
         cudaEventElapsedTime(&millisec, start,stop);
+        //time of the entire process
 	    double iter_time = millisec / 1.e3;
         #else
         double iter_time = i_time;
@@ -1065,8 +1094,8 @@ int main(int argc, char* argv[]) {
     printf( "%d iterations performed\n\n", NITER);
 
     printf("calculate performance\n");
-    mu = geometricMean(times, NITER);
-    sigma = geometricStandardDeviation(times, mu, NITER);
+    mu = geometricMean(times, NITER); //geometric mean of the execution times
+    sigma = geometricStandardDeviation(times, mu, NITER); //standard deviation of the execution times
 
     //print test data
     printf("matrix,Msparsity,Mtype,Mpattern,id,n,m,nonZeros,blockSize,Rand,sort,mu,sigma,nflop,nMemAcGL,nMemAcSH,AI_O,AI_A,AI,Iperf,flops,effBandGL,effBandSH,RP,N_STREAM\n");
@@ -1125,13 +1154,6 @@ int main(int argc, char* argv[]) {
 
     int nflop = 2*nonZeros;
 
-    unsigned int nMemAcGL = sizeof(dtype)*(2*nonZeros) + sizeof(int)*2*nonZeros;
-    unsigned int nMemAcSH = sizeof(dtype)*(2*nonZeros) + sizeof(int)*2*nonZeros;
-
-    double AI_O = 2;
-    int AI_A = 3*sizeof(dtype) + sizeof(int)*2;
-    double AI = AI_O/AI_A;
-
     #endif
 
     #if !defined(COO_CUSPARSE)
@@ -1158,14 +1180,13 @@ int main(int argc, char* argv[]) {
     #endif
     #endif
 
-    #ifndef COO_CUSPARSE
+    #ifdef COO_OLD
     double Iperf = AI*MB; //ideal performance
     double effBandGL = (nMemAcGL/1.e9)/mu; //effective global memory bandwidth
     double effBandSH = (nMemAcSH/1.e9)/mu; //effective shared memory bandwidth
     #endif
 
     double flops = (nflop / mu)/1.e9; //flop operation for second
-
     double RP = 11.039657; //Roofline peak
 
     #ifndef COO_CUSPARSE
@@ -1179,7 +1200,7 @@ int main(int argc, char* argv[]) {
     #endif
     #endif
 
-
+	//free every vector
     cudaFree(d_b);
     cudaFree(d_c);
 
