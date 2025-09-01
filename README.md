@@ -1,4 +1,95 @@
 # SPMV PROJECT
+## Deliverable_2
+### Directory structure
+
+In this section, the project's directory structure and the contents of each directory and file are explained:
+* graph_script: directory for the graphs creation script
+  - graph_report.ipynb: it is a Jupyter notebook for the compilation of some data graph used by the report based on the test
+* matrix: it will contain the matrices used in the test
+* makefile
+* sbatch_script: directory for the sbatch scripts 
+  - sbatch_script.sh: sbatch script for a run of a GPU Solution with a matrix
+  - sbatch_script_rand.sh: sbatch script for a run of a GPU Solution with a random matrix
+  - sbatch_test.sh: sbatch script for the test
+  - sbatch_test_ncu.sh: sbatch script for the ncu test
+  - sbatch_test_ncu_new_solution.sh: sbatch script for the ncu test of the new solution
+  - sbatch_test_nsys.sh: sbatch script for the nsys test
+  - sbatch_test_nsys_new_solution.sh: sbatch script for the nsys test of the new solution
+* python_script: directory for the python scripts utilized to parse the test data
+  - Parse_script_out.py: python script for parse test results
+  - Parse_ncu_report.py: python script for parse ncu test results
+  - Parse_statistics_report.py: python script for clean the output of Parse_ncu_report.py
+* test_script: directory for the test scripts
+  - test.sh: test of all solutions
+  - test_ncu.sh: test ncu of all solutions
+  - test_nsys.sh: test nsys of all solutions
+* test: directory for the parsed results of the normal, ncu and sys tests, and the ncu and nsys reports (see some examples)
+* SpMV.cu: cu script for the GPU solutions
+* include: directory for the headers for the time, print, mean, standard deviation library, sparse matrix analysis and utility functions
+* src: directory for the source code for some header files in include directory
+
+### Test procedure
+
+To execute the tests used for the paper follow this instructions:
+1. Clone the repository
+2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
+3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
+4. Give the permission to the test scripts:
+   1. `chmod +x ./test_script/test.sh`
+   2. `chmod +x ./test_script/test_ncu.sh`
+   3. `chmod +x ./test_script/test_ncu.sh`
+5. Execute the test scripts, where n is the number of streams for the COO_NEW_1 solution:
+   1. normal test of all solutions: `./test_script/test.sh n`
+   2. ncu test of all solutions: `./test_script/test_ncu.sh n`
+   3. nsys test of all solutions: `./test_script/test_nsys.sh n`
+6. When the tests end, the results can be found as:
+   1. `test/GPU_test_Complete_n.csv` for the normal tests
+   2. `test/combined_ncu_report_new_n.csv` for the ncu tests
+   3. ncu and sys reports respectively in `test/report_ncu` and `test/report_nsys`
+7. In case you can run Jupyter notebook, you can visualize some graphs related to the tests through the notebook `graph_script/graph_report.ipynb`
+
+### Correctness check
+
+To check the correctness of the GPU solutions follow these instructions:
+1. Clone the repository
+2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
+3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
+4. Load the required module: `module load CUDA/12.3.2`
+5. Remove the possible executable: `rm bin/SpMV`
+6. Execute `make` with the desired macros:
+   * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D Check"`
+   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D Check"`
+   * COO_NEW_1 solution (where n is the block size and m is the number of the stream): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D Check"`
+7. Execute the sbatch script with an integer matrix *.mtx (eg. Cities.mtx) and, only in COO_OLD case, the block size B (eg. 32): `sbatch sbatch_script.sh *.mtx B`
+8. Check in the directory `outputs` the output file with the id correspondent to the job executed
+9. In that file, besides the other test information there will be a field `SpMV verification:`
+   * In the case appears `SUCCESS`, the solution is correct
+   * In the case appears `FAILURE`, the solution is uncorrect
+
+### Random run
+
+To execute a solution with a random matrix follow these instruction:
+1. Clone the repository
+2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
+3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
+4. Load the required module: `module load CUDA/12.3.2`
+5. Remove the possible executable: `rm bin/SpMV`
+6. Execute `make` with the desired macros:
+   * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D RAND"`
+   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D RAND"`
+   * COO_NEW_1 solution (where n is the block size and m is the number of the stream): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D RAND"`
+7. If you want check the correctness just insert `-D Check`.
+8. Execute the sbatch script `sbatch sbatch_script_rand.sh` with the following arguments:
+   * Number of matrix row
+   * Number of matrix column
+   * Number of non-zeros elements
+   * block size (eg. 32) (only in COO_OLD case)
+   * Random seed (eg. 1)
+9. Check in the directory `outputs` the output file with the id correspondent to the job executed
+10. In that file, besides the other test information, if you have specified `-D Check` there will be a field `SpMV verification:`
+    * In the case appears `SUCCESS`, the solution is correct
+    * In the case appears `FAILURE`, the solution is uncorrect
+
 ## Deliverable_1
 ### Directory structure
 
@@ -109,95 +200,3 @@ To execute a solution with a random matrix follow these instruction:
       * Number of non-zeros elements
       * Random seed (eg. 1)
    7. Check in the directory `outputs` the output file with the id correspondent to the job executed
-      
-## Deliverable_2
-### Directory structure
-
-In this section, the project's directory structure and the contents of each directory and file are explained:
-* graph_script: directory for the graphs creation script
-  - graph_report.ipynb: it is a Jupyter notebook for the compilation of some data graph used by the report based on the test
-* matrix: it will contain the matrices used in the test
-* makefile
-* sbatch_script: directory for the sbatch scripts 
-  - sbatch_script.sh: sbatch script for a run of a GPU Solution with a matrix
-  - sbatch_script_rand.sh: sbatch script for a run of a GPU Solution with a random matrix
-  - sbatch_test.sh: sbatch script for the test
-  - sbatch_test_ncu.sh: sbatch script for the ncu test
-  - sbatch_test_ncu_new_solution.sh: sbatch script for the ncu test of the new solution
-  - sbatch_test_nsys.sh: sbatch script for the nsys test
-  - sbatch_test_nsys_new_solution.sh: sbatch script for the nsys test of the new solution
-* python_script: directory for the python scripts utilized to parse the test data
-  - Parse_script_out.py: python script for parse test results
-  - Parse_ncu_report.py: python script for parse ncu test results
-  - Parse_statistics_report.py: python script for clean the output of Parse_ncu_report.py
-* test_script: directory for the test scripts
-  - test.sh: test of all solutions
-  - test_ncu.sh: test ncu of all solutions
-  - test_nsys.sh: test nsys of all solutions
-* test: directory for the parsed results of the normal, ncu and sys tests, and the ncu and nsys reports (see some examples)
-* SpMV.cu: cu script for the GPU solutions
-* include: directory for the headers for the time, print, mean, standard deviation library, sparse matrix analysis and utility functions
-* src: directory for the source code for some header files in include directory
-
-### Test procedure
-
-To execute the tests used for the paper follow this instructions:
-1. Clone the repository
-2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
-3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
-4. Give the permission to the test scripts:
-   1. `chmod +x ./test_script/test.sh`
-   2. `chmod +x ./test_script/test_ncu.sh`
-   3. `chmod +x ./test_script/test_ncu.sh`
-5. Execute the test scripts, where n is the number of streams for the COO_NEW_1 solution:
-   1. normal test of all solutions: `./test_script/test.sh n`
-   2. ncu test of all solutions: `./test_script/test_ncu.sh n`
-   3. nsys test of all solutions: `./test_script/test_nsys.sh n`
-6. When the tests end, the results can be found as:
-   1. `test/GPU_test_Complete_n.csv` for the normal tests
-   2. `test/combined_ncu_report_new_n.csv` for the ncu tests
-   3. ncu and sys reports respectively in `test/report_ncu` and `test/report_nsys`
-7. In case you can run Jupyter notebook, you can visualize some graphs related to the tests through the notebook `graph_script/graph_report.ipynb`
-
-### Correctness check
-
-To check the correctness of the GPU solutions follow these instructions:
-1. Clone the repository
-2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
-3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
-4. Load the required module: `module load CUDA/12.3.2`
-5. Remove the possible executable: `rm bin/SpMV`
-6. Execute `make` with the desired macros:
-   * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D Check"`
-   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D Check"`
-   * COO_NEW_1 solution (where n is the block size and m is the number of the stream): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D Check"`
-7. Execute the sbatch script with an integer matrix *.mtx (eg. Cities.mtx) and, only in COO_OLD case, the block size B (eg. 32): `sbatch sbatch_script.sh *.mtx B`
-8. Check in the directory `outputs` the output file with the id correspondent to the job executed
-9. In that file, besides the other test information there will be a field `SpMV verification:`
-   * In the case appears `SUCCESS`, the solution is correct
-   * In the case appears `FAILURE`, the solution is uncorrect
-
-### Random run
-
-To execute a solution with a random matrix follow these instruction:
-1. Clone the repository
-2. Download the following matrices from [here](https://sparse.tamu.edu) in `Path/to/Deliverable_2/matrix` directory: BenElechi1.mtx, degme.mtx, Cities.mtx, mawi_201512012345.mtx, rail2586.mtx, specular.mtx
-3. Go to the Deliverable_2 directory: `cd Path/to/Deliverable_2`
-4. Load the required module: `module load CUDA/12.3.2`
-5. Remove the possible executable: `rm bin/SpMV`
-6. Execute `make` with the desired macros:
-   * COO_OLD solution (sorted by row or by column): `make "MACROS=-D COO_OLD  (-D SortR or -D SortC) -D RAND"`
-   * Cusparse solution: `make "MACROS=-D COO_CUSPARSE -D SortR -D RAND"`
-   * COO_NEW_1 solution (where n is the block size and m is the number of the stream): `make "MACROS=-D COO_NEW_1 -D SortR -D BLOCK_SIZE=n -D N_STREAM=m -D RAND"`
-7. If you want check the correctness just insert `-D Check`.
-8. Execute the sbatch script `sbatch sbatch_script_rand.sh` with the following arguments:
-   * Number of matrix row
-   * Number of matrix column
-   * Number of non-zeros elements
-   * block size (eg. 32) (only in COO_OLD case)
-   * Random seed (eg. 1)
-9. Check in the directory `outputs` the output file with the id correspondent to the job executed
-10. In that file, besides the other test information, if you have specified `-D Check` there will be a field `SpMV verification:`
-    * In the case appears `SUCCESS`, the solution is correct
-    * In the case appears `FAILURE`, the solution is uncorrect
-
